@@ -1,6 +1,6 @@
 # path-starts-with [![NPM version](https://img.shields.io/npm/v/path-starts-with.svg?style=flat)](https://www.npmjs.com/package/path-starts-with) [![NPM monthly downloads](https://img.shields.io/npm/dm/path-starts-with.svg?style=flat)](https://npmjs.org/package/path-starts-with) [![Linux Build Status](https://img.shields.io/travis/jonschlinkert/path-starts-with.svg?style=flat&label=Travis)](https://travis-ci.org/jonschlinkert/path-starts-with)
 
-> Returns true if a filepath starts with the given string.
+> Returns true if a filepath starts with the given string. Works with windows and posix/unix paths.
 
 ## Install
 
