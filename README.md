@@ -1,4 +1,4 @@
-# path-starts-with [![NPM version](https://img.shields.io/npm/v/path-starts-with.svg?style=flat)](https://www.npmjs.com/package/path-starts-with) [![NPM monthly downloads](https://img.shields.io/npm/dm/path-starts-with.svg?style=flat)](https://npmjs.org/package/path-starts-with) [![Linux Build Status](https://img.shields.io/travis/jonschlinkert/path-starts-with.svg?style=flat&label=Travis)](https://travis-ci.org/jonschlinkert/path-starts-with)
+# path-starts-with [![NPM version](https://img.shields.io/npm/v/path-starts-with.svg?style=flat)](https://www.npmjs.com/package/path-starts-with) [![NPM monthly downloads](https://img.shields.io/npm/dm/path-starts-with.svg?style=flat)](https://npmjs.org/package/path-starts-with) [![Linux Build Status](https://img.shields.io/travis/jonschlinkert/path-starts-with.svg?style=flat&label=Travis)](https://travis-ci.org/jonschlinkert/path-starts-with) [![Windows Build Status](https://img.shields.io/appveyor/ci/jonschlinkert/path-starts-with.svg?style=flat&label=AppVeyor)](https://ci.appveyor.com/project/jonschlinkert/path-starts-with)
 
 > Returns true if a filepath starts with the given string. Works with windows and posix/unix paths.
 
@@ -23,6 +23,15 @@ var startsWith = require('path-starts-with');
 
 console.log(startsWith('foo/bar', 'foo')); //=> true
 console.log(startsWith('foo/bar', 'bar')); //=> false
+```
+
+## Negation
+
+Prefix the substring with `!` to return true when the path _does not_ start with the substring.
+
+```js
+console.log(startsWith('foo/bar', '!foo')); //=> false
+console.log(startsWith('foo/bar', '!bar')); //=> true
 ```
 
 ## options
