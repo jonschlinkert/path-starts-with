@@ -14,23 +14,34 @@
   ],
   "main": "index.js",
   "engines": {
-    "node": ">=4"
+    "node": ">=8"
   },
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {
-    "normalize-path": "^2.1.1"
-  },
   "devDependencies": {
-    "gulp-format-md": "^0.1.12",
-    "mocha": "^3.2.0"
+    "gulp-format-md": "^2.0.0",
+    "mocha": "^6.1.4"
   },
   "keywords": [
-    "generategenerator",
+    "directory",
+    "file path",
+    "file",
+    "filepath",
+    "folder",
+    "fs",
+    "inside",
     "path",
+    "posix",
+    "relative",
+    "slash",
+    "slashes",
     "starts",
-    "with"
+    "startsWith",
+    "util",
+    "utility",
+    "utils",
+    "windows"
   ],
   "verb": {
     "toc": false,

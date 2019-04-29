@@ -1,53 +1,42 @@
 'use strict';
 
 require('mocha');
-var assert = require('assert');
-var startsWith = require('./');
+const assert = require('assert');
+const startsWith = require('./');
 
-describe('startsWith', function() {
-  describe('error handling', function() {
-    it('should throw an error when invalid args are passed', function() {
-      assert.throws(function() {
-        startsWith();
-      }, /expected/);
-
-      assert.throws(function() {
-        startsWith({});
-      }, /expected/);
-
-      assert.throws(function() {
-        startsWith([]);
-      }, /expected/);
-
-      assert.throws(function() {
-        startsWith(null);
-      }, /expected/);
+describe('startsWith', () => {
+  describe('error handling', () => {
+    it('should throw an error when invalid args are passed', () => {
+      assert.throws(() => startsWith(), /expected/);
+      assert.throws(() => startsWith({}), /expected/);
+      assert.throws(() => startsWith([]), /expected/);
+      assert.throws(() => startsWith(null), /expected/);
     });
   });
 
-  it('should be false when the value is an empty string', function() {
+  it('should be false when the value is an empty string', () => {
     assert(!startsWith('foo', ''));
   });
 
-  describe('options', function() {
-    describe('.nocase', function() {
-      it('should be case sensitive by default', function() {
+  describe('options', () => {
+    describe('.nocase', () => {
+      it('should be case sensitive by default', () => {
         assert(!startsWith('foo', 'FOO'));
         assert(!startsWith('FOO', 'foo'));
         assert(!startsWith('foo/bar', 'FOO/bar'));
         assert(!startsWith('FOO/bar', 'foo/bar'));
       });
 
-      it('should not be case sensitive when options.nocase is true', function() {
-        assert(startsWith('foo', 'FOO', {nocase: true}));
-        assert(startsWith('FOO', 'foo', {nocase: true}));
-        assert(startsWith('foo/bar', 'FOO/bar', {nocase: true}));
-        assert(startsWith('FOO/bar', 'foo/bar', {nocase: true}));
+      it('should not be case sensitive when options.nocase is true', () => {
+        assert(startsWith('foo', 'FOO', { nocase: true }));
+        assert(startsWith('FOO', 'foo', { nocase: true }));
+        assert(startsWith('foo/bar', 'FOO/bar', { nocase: true }));
+        assert(startsWith('FOO/bar', 'foo/bar', { nocase: true }));
       });
     });
 
-    describe('.partialMatch', function() {
-      it('should return false for partial matches by default', function() {
+    describe('.partialMatch', () => {
+      it('should return false for partial matches by default', () => {
         assert(!startsWith('foo', 'f'));
         assert(!startsWith('foo', 'fo'));
         assert(!startsWith('foobar', 'foo'));
@@ -70,8 +59,8 @@ describe('startsWith', function() {
         assert(!startsWith('foo\\bar\\baz.md', 'foo\\bar\\baz.m'));
       });
 
-      it('should allow partial matches when partialMatch is true', function() {
-        var opts = { partialMatch: true };
+      it('should allow partial matches when partialMatch is true', () => {
+        let opts = { partialMatch: true };
         assert(startsWith('foo', 'f', opts));
         assert(startsWith('foo', 'fo', opts));
         assert(startsWith('foobar', 'foo', opts));
@@ -95,8 +84,8 @@ describe('startsWith', function() {
     });
   });
 
-  describe('starts with', function() {
-    it('should be true when path starts with substring', function() {
+  describe('starts with', () => {
+    it('should be true when path starts with substring', () => {
       assert(!startsWith('.foo', 'foo'));
       assert(!startsWith('foo', '.foo'));
       assert(!startsWith('foo', 'foo.md'));
@@ -138,8 +127,8 @@ describe('startsWith', function() {
     });
   });
 
-  describe('negation', function() {
-    it('should be false when path starts with negated substring', function() {
+  describe('negation', () => {
+    it('should be false when path starts with negated substring', () => {
       assert(startsWith('.foo', '!foo'));
       assert(startsWith('foo', '!.foo'));
       assert(startsWith('foo', '!foo.md'));
@@ -181,8 +170,8 @@ describe('startsWith', function() {
     });
   });
 
-  describe('path begins with string', function() {
-    it('should strip leading "./" from path', function() {
+  describe('path begins with string', () => {
+    it('should strip leading "./" from path', () => {
       assert(!startsWith('./foo/bar/baz', './bar'));
       assert(!startsWith('./foo/bar/baz', 'bar'));
       assert(startsWith('./foo/bar/baz', './foo'));
@@ -216,7 +205,7 @@ describe('startsWith', function() {
       assert(startsWith('.\\foo\\bar\\baz', 'foo\\bar'));
     });
 
-    it('should strip leading "./" from substring', function() {
+    it('should strip leading "./" from substring', () => {
       assert(!startsWith('./foo/bar/baz', './bar'));
       assert(!startsWith('foo/bar/baz', './bar'));
       assert(!startsWith('./.foo', './foo'));
@@ -240,8 +229,8 @@ describe('startsWith', function() {
     });
   });
 
-  describe('prefixed with "/"', function() {
-    it('should match leading slashes', function() {
+  describe('prefixed with "/"', () => {
+    it('should match leading slashes', () => {
       assert(!startsWith('./bar/baz/qux', '/bar'));
       assert(!startsWith('./foo/bar/baz', '/foo/bar'));
       assert(!startsWith('/bar/baz/qux', './bar'));
@@ -302,7 +291,7 @@ describe('startsWith', function() {
       assert(startsWith('\\foo\\bar\\baz', '\\foo\\bar'));
     });
 
-    it('should not match when fewer leading slashes than expected', function() {
+    it('should not match when fewer leading slashes than expected', () => {
       assert(!startsWith('//foo', '////foo'));
       assert(!startsWith('/foo', '//'));
       assert(!startsWith('/foo/', '//'));
@@ -325,7 +314,7 @@ describe('startsWith', function() {
       assert(!startsWith('\\foo\\', '\\\\\\'));
     });
 
-    it('should not match when more leading slashes than expected', function() {
+    it('should not match when more leading slashes than expected', () => {
       assert(!startsWith('//foo', '/'));
       assert(!startsWith('//foo', '/foo'));
       assert(!startsWith('///foo', '/foo'));
@@ -348,7 +337,7 @@ describe('startsWith', function() {
       assert(!startsWith('\\\\\\\\foo', '\\\\foo'));
     });
 
-    it('should be false for partial matches', function() {
+    it('should be false for partial matches', () => {
       assert(!startsWith('//foobar', '//f'));
       assert(!startsWith('//foobar', '//fo'));
       assert(!startsWith('//foobar', '//foo'));
@@ -376,13 +365,14 @@ describe('startsWith', function() {
     });
   });
 
-  describe('windows drive letters', function() {
-    it('should match paths that start with windows drive letters', function() {
+  describe('windows drive letters', () => {
+    it('should match paths that start with windows drive letters', () => {
       assert(startsWith('C:', 'C:'));
       assert(startsWith('C:/', 'C:/'));
       assert(startsWith('C:/foo', 'C:'));
       assert(startsWith('C:/foo', 'C:/'));
       assert(startsWith('C:/foo', 'C:/foo'));
+      assert(!startsWith('C:/foo', 'A:/'));
       assert(startsWith('C:/foo/bar', 'C:/foo'));
       assert(!startsWith('C:/foo/bar', 'C:/bar'));
       assert(!startsWith('C:/foo/bar', 'foo/bar'));
@@ -413,14 +403,12 @@ describe('startsWith', function() {
       assert(!startsWith('C:\\foo\\bar', 'foo\\bar'));
     });
 
-    it('should be false for partial matches', function() {
+    it('should be false for partial matches', () => {
       assert(!startsWith('C:/foobar', 'C:/f'));
       assert(!startsWith('C:/foobar', 'C:/fo'));
       assert(!startsWith('C:/foobar', 'C:/foo'));
       assert(!startsWith('C:/foo.bar', 'C:/foo'));
       assert(!startsWith('C:/foo', 'C:/foobar'));
-      assert(!startsWith('C:/foo', 'CC:/foo'));
-      assert(!startsWith('CC:/foo', 'C:/foo'));
 
       assert(!startsWith('C:\\foobar', 'C:\\f'));
       assert(!startsWith('C:\\foobar', 'C:\\fo'));
@@ -428,7 +416,6 @@ describe('startsWith', function() {
       assert(!startsWith('C:\\foo.bar', 'C:\\foo'));
       assert(!startsWith('C:\\foo', 'C:\\foobar'));
       assert(!startsWith('C:\\foo', 'CC:\\foo'));
-      assert(!startsWith('CC:\\foo', 'C:\\foo'));
     });
   });
 });

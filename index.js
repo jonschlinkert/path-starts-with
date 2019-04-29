@@ -1,8 +1,27 @@
 'use strict';
 
-var normalizePath = require('normalize-path');
+const toPosixSlashes = str => str.replace(/\\/g, '/');
+const isPathSeparator = code => code === 47 || code === 92;
+const isDot = code => code === 46;
 
-module.exports = function startsWith(filepath, substr, options) {
+const removeDotSlash = str => {
+  if (isDot(str.charCodeAt(0)) && isPathSeparator(str.charCodeAt(1))) {
+    return str.slice(2);
+  }
+  return str;
+};
+
+const countLeadingSlashes = str => {
+  let i = 0;
+  for (; i < str.length; i++) {
+    if (!isPathSeparator(str.charCodeAt(i))) {
+      break;
+    }
+  }
+  return i;
+};
+
+const startsWith = (filepath, substr, options) => {
   if (typeof filepath !== 'string') {
     throw new TypeError('expected filepath to be a string');
   }
@@ -10,74 +29,55 @@ module.exports = function startsWith(filepath, substr, options) {
     throw new TypeError('expected substring to be a string');
   }
 
-  if (substr === '') {
+  filepath = removeDotSlash(filepath);
+  substr = removeDotSlash(substr);
+
+  if (filepath === substr) return true;
+
+  if (substr === '' || filepath === '') {
     return false;
   }
 
-  options = options || {};
-  if (options.exact === true) {
-    return filepath.indexOf(substr) === 0;
-  }
-
-  if (options.nocase === true) {
+  if (options && options.nocase !== false) {
     substr = substr.toLowerCase();
     filepath = filepath.toLowerCase();
   }
 
-  // return true if the given strings are an exact match
-  if (filepath === substr) {
-    return true;
-  }
+  // return true if the lowercased strings are an exact match
+  if (filepath === substr) return true;
 
-  if (substr.charAt(0) === '!') {
+  if (substr.charAt(0) === '!' && (!options || !options.nonegate)) {
     return !startsWith(filepath, substr.slice(1), options);
   }
 
-  var substrSlashes = leadingSlashes(substr);
-  var filepathSlashes = leadingSlashes(filepath);
-
   // normalize slashes in substring and filepath
-  var str = normalize(substr, false);
-  var fp = normalize(filepath, false);
+  let fp = toPosixSlashes(filepath);
+  let str = toPosixSlashes(substr);
 
-  // return if normalized strings are an exact match,
-  // or if substring consists of only slashes
-  if (substrSlashes === substr.length || fp === str) {
-    return filepathSlashes === substrSlashes;
+  // now that slashes are normalized, check for an exact match again
+  if (fp === str) return true;
+  if (!fp.startsWith(str)) return false;
+
+  // if partialMatch is enabled, we have a match
+  if (options && options.partialMatch === true) {
+    return true;
   }
 
-  if (fp.indexOf(str) === 0) {
-    if (options.partialMatch === true) {
-      return true;
-    }
+  let substrSlashesLen = countLeadingSlashes(substr);
+  let filepathSlashesLen = countLeadingSlashes(filepath);
 
-    // handle "C:/foo" matching "C:/"
-    if (str.slice(-1) === '/' && /^\w+:/.test(fp)) {
-      return true;
-    }
-
-    var ch = fp.charAt(str.length);
-    return ch === '' || ch === '/';
+  // if substring consists of only slashes, the
+  // filepath must begin with the same number of slashes
+  if (substrSlashesLen === substr.length) {
+    return filepathSlashesLen === substrSlashesLen;
   }
 
-  return false;
+  // handle "C:/foo" matching "C:/"
+  if (str.endsWith('/') && /^[A-Z]:\//.test(fp)) {
+    return true;
+  }
+
+  return fp[str.length] === '/';
 };
 
-function leadingSlashes(str) {
-  var i = 0;
-  for (; i < str.length; i++) {
-    var ch = str[i];
-    if (ch !== '/' && ch !== '\\') {
-      break;
-    }
-  }
-  return i;
-}
-
-function normalize(str) {
-  str = normalizePath(str, false);
-  if (str.slice(0, 2) === './') {
-    str = str.slice(2);
-  }
-  return str;
-}
+module.exports = startsWith;
