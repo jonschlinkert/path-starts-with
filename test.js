@@ -60,7 +60,7 @@ describe('startsWith', () => {
       });
 
       it('should allow partial matches when partialMatch is true', () => {
-        let opts = { partialMatch: true };
+        const opts = { partialMatch: true };
         assert(startsWith('foo', 'f', opts));
         assert(startsWith('foo', 'fo', opts));
         assert(startsWith('foobar', 'foo', opts));

@@ -51,8 +51,8 @@ const startsWith = (filepath, substr, options) => {
   }
 
   // normalize slashes in substring and filepath
-  let fp = toPosixSlashes(filepath);
-  let str = toPosixSlashes(substr);
+  const fp = toPosixSlashes(filepath);
+  const str = toPosixSlashes(substr);
 
   // now that slashes are normalized, check for an exact match again
   if (fp === str) return true;
@@ -63,8 +63,8 @@ const startsWith = (filepath, substr, options) => {
     return true;
   }
 
-  let substrSlashesLen = countLeadingSlashes(substr);
-  let filepathSlashesLen = countLeadingSlashes(filepath);
+  const substrSlashesLen = countLeadingSlashes(substr);
+  const filepathSlashesLen = countLeadingSlashes(filepath);
 
   // if substring consists of only slashes, the
   // filepath must begin with the same number of slashes
